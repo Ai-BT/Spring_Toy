@@ -1,4 +1,4 @@
-# WMKorea
+# WMKorea (https://github.com/freshkimdh/WMKorea)
 ###### We Made Korea 웹사이트로 구현한 여행정보공유 페이지
   >프로젝트 
   ###### 한국 여행을 원하는 사용자에게 유명 관광지나 맛집정보를 서로 공유하고 추천하는 프로젝트
@@ -33,3 +33,4 @@
   * Service/ServiceImpl
   * mapper
   * DB(Oracle)
+  
