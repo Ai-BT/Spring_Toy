@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+  "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+  "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+
+	<definition name="layout"
+		template="/WEB-INF/views/layout.jsp">
+		<put-attribute name="header"
+			value="/WEB-INF/layout/header.jsp" />
+		<put-attribute name="footer"
+			value="/WEB-INF/layout/footer.jsp" />
+	</definition>
+
+
+	<definition name="baseForm"
+		template="/WEB-INF/views/layout/baseForm.jsp">
+
+		<put-attribute name="header"
+			value="/WEB-INF/views/layout/header.jsp" />
+
+		<put-attribute name="body" value="" />
+
+		<put-attribute name="footer"
+			value="/WEB-INF/views/layout/footer.jsp" />
+	</definition>
+
+
+
+	<!-- wmk_home folder start -->
+	<definition name="/wmk_home/index" extends="baseForm">
+
+		<put-attribute name="body"
+			value="/WEB-INF/views/wmk_home/index.jsp" />
+
+	</definition>
+
+
+	<definition name="/wmk_home/joinForm" extends="baseForm">
+
+		<put-attribute name="body"
+			value="/WEB-INF/views/wmk_home/joinForm.jsp" />
+
+	</definition>
+
+
+	<definition name="/wmk_home/loginForm" extends="baseForm">
+
+		<put-attribute name="body"
+			value="/WEB-INF/views/wmk_home/loginForm.jsp" />
+
+	</definition>
+
+
+	<definition name="/wmk_home/myPage" extends="baseForm">
+
+		<put-attribute name="body"
+			value="/WEB-INF/views/wmk_home/myPage.jsp" />
+
+	</definition>
+
+	<definition name="/wmk_home/characterMaking"
+		extends="baseForm">
+
+		<put-attribute name="body"
+			value="/WEB-INF/views/wmk_home/characterMaking.jsp" />
+
+	</definition>
+
+	<definition name="/wmk_home/allAreaContentView"
+		extends="baseForm">
+
+		<put-attribute name="body"
+			value="/WEB-INF/views/wmk_home/allAreaContentView.jsp" />
+
+	</definition>	
+	
+	<!-- wmk_home folder end -->
+
+
+
+	<!-- wmk_goods folder start -->
+	<definition name="/wmk_goods/goodsList" extends="baseForm">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wmk_goods/goodsList.jsp" />
+	</definition>
+
+
+	<definition name="/wmk_goods/goodsView" extends="baseForm">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wmk_goods/goodsView.jsp" />
+	</definition>
+
+
+	<definition name="/wmk_goods/goodsView" extends="baseForm">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wmk_goods/goodsView.jsp" />
+	</definition>
+
+	<definition name="/wmk_goods/cartList" extends="baseForm">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wmk_goods/cartList.jsp" />
+	</definition>
+
+	<definition name="/wmk_goods/goodsOrder" extends="baseForm">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wmk_goods/goodsOrder.jsp" />
+	</definition>
+
+	<definition name="/wmk_goods/goodsOrderComplete" extends="baseForm">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wmk_goods/goodsOrderComplete.jsp" />
+	</definition>
+
+	<definition name="/wmk_goods/orderList" extends="baseForm">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wmk_goods/orderList.jsp" />
+	</definition>
+
+	<definition name="/wmk_goods/orderView" extends="baseForm">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wmk_goods/orderView.jsp" />
+	</definition>
+
+	<definition name="/wmk_goods/goods_register"
+		extends="baseForm">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wmk_goods/goods_register.jsp" />
+	</definition>
+	<!-- wmk_goods folder end -->
+
+
+	<!-- free board -->
+	<definition name="/free_board/boardList" extends="baseForm">
+		<put-attribute name="body"
+			value="/WEB-INF/views/free_board/boardList.jsp" />
+	</definition>
+
+	<definition name="/free_board/contentView" extends="baseForm">
+		<put-attribute name="body"
+			value="/WEB-INF/views/free_board/contentView.jsp" />
+	</definition>
+
+	<definition name="/free_board/writeView" extends="baseForm">
+		<put-attribute name="body"
+			value="/WEB-INF/views/free_board/writeView.jsp" />
+	</definition>
+
+	<definition name="/free_board/modifyView" extends="baseForm">
+		<put-attribute name="body"
+			value="/WEB-INF/views/free_board/modifyView.jsp" />
+	</definition>
+	<!-- free board end -->
+
+
+	<!-- error page -->
+	<definition name="accessDenied" extends="baseForm">
+		<put-attribute name="body"
+			value="/WEB-INF/views/accessDenied.jsp" />
+	</definition>
+
+	<definition name="loginFail" extends="baseForm">
+		<put-attribute name="body"
+			value="/WEB-INF/views/loginFail.jsp" />
+	</definition>
+	<!-- error page end -->
+
+
+	<!-- hot board page -->
+	<definition name="/hot_board/hotReviewList" extends="baseForm">
+
+		<put-attribute name="body"
+			value="/WEB-INF/views/hot_board/hotReviewList.jsp" />
+
+	</definition>
+	
+	
+	
+	
+	
+	<!-- hot board end -->
+	
+	
+	
+	<!-- review board pages -->
+	
+	<definition name="/review_board/areaIndex" extends="baseForm">
+
+		<put-attribute name="body"
+			value="/WEB-INF/views/review_board/areaIndex.jsp" />
+
+	</definition>
+	
+	<definition name="/review_board/userReviewList" extends="baseForm">
+
+		<put-attribute name="body"
+			value="/WEB-INF/views/review_board/userReviewList.jsp" />
+
+	</definition>
+	
+	<definition name="/review_board/reviewContentView" extends="baseForm">
+
+		<put-attribute name="body"
+			value="/WEB-INF/views/review_board/reviewContentView.jsp" />
+
+	</definition>
+	
+	<definition name="/review_board/modifyView" extends="baseForm">
+
+		<put-attribute name="body"
+			value="/WEB-INF/views/review_board/modifyView.jsp" />
+
+	</definition>
+
+	<definition name="/review_board/writeView" extends="baseForm">
+
+		<put-attribute name="body"
+			value="/WEB-INF/views/review_board/writeView.jsp" />
+
+	</definition>	
+	
+	
+		
+	<!-- review board pages end -->
+	
+	
+
+	<!--  user folder -->
+
+	<definition name="user/UserDeleteView"
+		extends="baseForm">
+
+		<put-attribute name="body"
+			value="/WEB-INF/views/user/UserDeleteView.jsp" />
+
+	</definition>		
+	
+	
+	<definition name="user/userUploadProfile"
+		extends="baseForm">
+
+		<put-attribute name="body"
+			value="/WEB-INF/views/user/userUploadProfile.jsp" />
+
+	</definition>
+	
+	<definition name="user/userModify"
+		extends="baseForm">
+
+		<put-attribute name="body"
+			value="/WEB-INF/views/user/userModify.jsp" />
+
+	</definition>			
+
+	<definition name="user/userModify"
+		extends="baseForm">
+
+		<put-attribute name="body"
+			value="/WEB-INF/views/user/userModify.jsp" />
+
+	</definition>
+	
+	<definition name="user/userPwModify"
+		extends="baseForm">
+
+		<put-attribute name="body"
+			value="/WEB-INF/views/user/userPwModify.jsp" />
+
+	</definition>
+
+
+	<!-- user folder ends -->
+
+</tiles-definitions>
+
+
+
+
+
+

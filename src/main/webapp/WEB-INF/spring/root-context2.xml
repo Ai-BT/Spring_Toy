@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+		<property name="driverClassName"
+			value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
+		<property name="jdbcUrl"
+			value="jdbc:log4jdbc:oracle:thin:@localhost:1521:XE"></property>
+		<property name="username" value="scott"></property>
+		<property name="password" value="tiger"></property>
+	</bean>
+	
+	<!-- HikariCP configuration -->
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close"> <!-- ioc컨테이너에 datasource 객체가 생성되있을것이다. 제이유닛으로 테스트해보자. -->
+		<constructor-arg ref="hikariConfig" />
+	</bean>
+	
+	<!-- namespace에 nybatis-spring등록  -->	
+	<!-- ref = bean 객체  -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> <!-- sqlSessionFactory 얘가 마이바티스 다. -->
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+<!-- 	<mybatis-spring:scan
+		base-package="edu.bit.board.mapper" />
+
+ 	<context:component-scan
+		base-package="edu.bit.board.service"></context:component-scan> -->
+		
+ 	<mybatis-spring:scan
+		base-package="edu.bit.board.mapper" /> <!-- 해당코드가 없으면 인터페이스 xml 을 읽어들일수가 없다. -->
+
+ 	<context:component-scan
+		base-package="edu.bit.board.service"></context:component-scan> 		
+		
+		
+</beans>

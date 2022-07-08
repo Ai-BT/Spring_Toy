@@ -1,0 +1,126 @@
+
+--free board 게시판
+create table FREE_BOARD(
+	fBoard_Num NUMBER(20) not null PRIMARY KEY,
+	fId varchar2(20) not null,
+	fTitle VARCHAR2(100) not null,
+	fContent VARCHAR2(255),
+	fDate DATE DEFAULT SYSDATE,
+	fHit NUMBER(10) DEFAULT 0,
+	fGroup NUMBER(4),
+	fStep NUMBER(4),
+	fIndent NUMBER(4),
+	FOREIGN KEY (fId) REFERENCES wmk_users (id) 
+);
+
+--free 게시판 번호 순서
+create sequence free_board_seq; 
+
+
+
+
+---free board 게시판 댓글 ---
+create table free_reply (
+    fBoard_Num number not null, 
+    id varchar2(50) not null,
+    repNum number not null,
+    repCon varchar2(2000)  not null,
+    repDate date default sysdate,
+    primary key(fBoard_Num, repNum) 
+);
+
+--댓글 시퀀시
+create sequence free_reply_seq;
+
+alter table free_reply
+    add constraint free_reply_fBoard_Num foreign key(fBoard_Num)
+    references FREE_BOARD(fBoard_Num);
+
+alter table free_reply
+    add constraint free_reply_fId foreign key(id)
+    references wmk_users(id);
+
+--test
+insert into free_reply (fBoard_Num, id, repNum, repCon) values (1, 'the3536', free_reply_seq.nextval, '내용');
+
+
+=========================================================================================================
+
+--여행자 리뷰 게시판
+create table Review_Board(
+   rBoardNum NUMBER(20) not null PRIMARY KEY,  --게시판번호
+   rId VARCHAR2(20) not null,                  --글작성자
+   rTitle VARCHAR2(100) not null,              --글제목
+   rInShort VARCHAR2(100),            --요약
+   rContent VARCHAR2(4000),           --글내용
+   rDate DATE DEFAULT SYSDATE,       --작성일
+   rOpenTime VARCHAR2(20),            --개장시간
+   rArea VARCHAR2(50),                --지역
+   rAdress VARCHAR2(50),              --주소
+   rHit NUMBER(10) DEFAULT 0,       --조회수
+   rStep NUMBER(10),                  --댓글
+   rIndent NUMBER(10),                 --댓글
+   rCategory NUMBER(2),               --카테고리
+   FOREIGN KEY (rId) REFERENCES wmk_users (id)
+);
+
+--게시판 번호 자동 증가
+create sequence Review_Board_seq;
+
+--파일 업로드 
+CREATE TABLE Review_Img_File 
+(  
+FILE_NO NUMBER,  --파일 번호
+rBoardNum NUMBER NOT NULL,    --게시판 번호
+ORIGINAL_FILE_NAME VARCHAR2(260 BYTE) NOT NULL,  --원본 파일 이름
+STORED_FILE_NAME VARCHAR2(500 BYTE) NOT NULL,  --변경된 파일 이름
+FILE_SIZE NUMBER,   --파일 크기
+REGDATE DATE DEFAULT SYSDATE NOT NULL,   --파일등록일
+PRIMARY KEY (FILE_NO)  --기본키 FILE_NO
+);
+
+--파일 번호 자동생성
+create sequence Review_Img_File_no_seq;
+
+	
+-----------------------------
+--Review 게시판 댓글
+create table review_reply (
+    rBoardNum number not null, 
+    id varchar2(50) not null,
+    repNum number not null,
+    repCon varchar2(2000) not null,
+    repDate date default sysdate,
+    primary key(rBoardNum, repNum) 
+);
+
+create sequence review_reply_seq;
+
+alter table review_reply
+    add constraint review_reply_rBoardNum foreign key(rBoardNum)
+    references Review_Board(rBoardNum);
+    
+alter table review_reply
+    add constraint review_reply_rId foreign key(id)
+    references wmk_users(id);
+
+--test
+insert into review_reply (rBoardNum, id, repNum, repCon) values (22, 'the3536', review_reply_seq.nextval, '내용');
+
+--------------------------------------------------------------------좋아요-------------------------
+create table LIKETO(
+	LIKENO NUMBER(5) not null
+		primary key,
+	RBOARDNUM NUMBER(4)
+		references review_board,
+	ID VARCHAR2(50) not null
+		references WMK_USERS,
+	LIKE_CHECK NUMBER(5) default 0
+);
+
+--좋아요 시퀀시
+create sequence LIKE_TO_SEQ START WITH 1 INCREMENT BY 1 NOCACHE;
+
+--like_cnt 컬럼 추가
+alter table review_board add LIKE_CNT number(5) default 0; 
+    

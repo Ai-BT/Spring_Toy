@@ -1,0 +1,40 @@
+------------------------------------------여행게시판----------------------------------------------------
+
+--여행자 리뷰 게시판
+create table Review_Board(
+   rBoardNum NUMBER(20) not null PRIMARY KEY,  --게시판번호
+   rId VARCHAR2(20) not null,                  --글작성자
+   rTitle VARCHAR2(100) not null,              --글제목
+   rInShort VARCHAR2(100),            --요약
+   rContent VARCHAR2(4000),           --글내용
+   rDate DATE DEFAULT SYSDATE,       --작성일
+   rOpenTime VARCHAR2(20),            --개장시간
+   rArea VARCHAR2(50),                --지역
+   rAdress VARCHAR2(50),              --주소
+   rHit NUMBER(10) DEFAULT 0,       --조회수
+   rStep NUMBER(10),                  --댓글
+   rIndent NUMBER(10),                 --댓글
+   rCategory NUMBER(2),               --카테고리
+   FOREIGN KEY (rId) REFERENCES wmk_users (id)
+);
+
+--게시판 번호 자동 증가
+create sequence Review_Board_seq;
+
+--------------------------------------------파일업로드---------------------------------------------------
+
+--파일 업로드 
+CREATE TABLE Review_Img_File 
+(  
+FILE_NO NUMBER,  --파일 번호
+rBoardNum NUMBER NOT NULL,    --게시판 번호
+ORIGINAL_FILE_NAME VARCHAR2(260 BYTE) NOT NULL,  --원본 파일 이름
+STORED_FILE_NAME VARCHAR2(500 BYTE) NOT NULL,  --변경된 파일 이름
+FILE_SIZE NUMBER,   --파일 크기
+REGDATE DATE DEFAULT SYSDATE NOT NULL,   --파일등록일
+PRIMARY KEY (FILE_NO)  --기본키 FILE_NO
+);
+
+--파일 번호 자동생성
+create sequence Review_Img_File_no_seq;
+

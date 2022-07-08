@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wmk.ex.mapper.ShopMapper">
+	
+
+<!-- 카테고리별 상품 리스트 : 1차 분류 -->
+<select id="list_1" resultType="com.wmk.ex.vo.GoodsViewVO">
+select
+    g.gdsNum, g.gdsName, g.cateCode, c.cateCodeRef, c.cateName,
+    gdsPrice, gdsStock, gdsDes, gdsDate, g.gdsImg, g.gdsThumbImg
+        from tbl_goods g
+            inner join goods_category c
+                on g.cateCode = c.cateCode           
+            where g.cateCode = #{cateCode}
+             or c.cateCodeRef = #{cateCodeRef}
+</select>
+
+<!-- 카테고리별 상품 리스트 : 2차 분류 -->
+<select id="list_2" resultType="com.wmk.ex.vo.GoodsViewVO">
+select
+    g.gdsNum, g.gdsName, g.cateCode, c.cateCodeRef, c.cateName,
+    gdsPrice, gdsStock, gdsDes, gdsDate, g.gdsImg, g.gdsThumbImg
+        from tbl_goods g
+            inner join goods_category c
+                on g.cateCode = c.cateCode           
+            where g.cateCode = #{cateCode}
+</select>
+	
+
+<!-- 장바구니 담기 -->
+<insert id="addCart">
+insert into wmk_cart (cartNum, userId, gdsNum, gdsColor, gdsSize, gdsText, cartStock)
+			values (wmk_cart_seq.nextval, #{userId}, #{gdsNum}, #{gdsColor}, #{gdsSize}, #{gdsText}, #{cartStock})
+</insert>		
+
+
+<!-- 장바구니 보기 -->
+<select id="cartList" resultType="com.wmk.ex.vo.CartListVO">
+select
+    row_number() over(order by c.cartNum desc) as num,
+    c.cartNum, c.userId, c.gdsNum, c.cartStock, c.addDate, c.gdsColor, c.gdsSize, c.gdsText,
+    g.gdsName, g.gdsPrice, g.gdsimg
+from wmk_cart c
+    inner join wmk_goods g
+        on c.gdsNum = g.gdsNum
+    where c.userId = #{userId}
+</select>
+
+<!--  장바구니 삭제  -->
+<delete id="deleteCart">
+ delete wmk_cart
+     where cartNum = #{cartNum}
+         and userId = #{userId}
+</delete>
+
+<!-- 주문 정보 -->
+<insert id="orderInfo">
+ insert into wmk_order(orderId, userId, orderRec, userAddr1, userAddr2, userAddr3, orderPhon, amount)
+     values(#{orderId}, #{userId}, #{orderRec}, #{userAddr1}, #{userAddr2}, #{userAddr3}, #{orderPhon}, #{amount})
+</insert>
+   
+<!-- 주문 상세 정보 --> 
+<insert id="orderInfo_Details">
+ insert into wmk_order_details(orderDetailsNum, orderId, gdsNum, cartStock)
+     select wmk_order_details_seq.nextval, #{orderId}, gdsNum, cartStock
+         from wmk_cart   
+</insert> 
+
+<!-- 주문시 카트 비우기 -->
+<delete id="cartAllDelete">
+ delete wmk_cart
+     where userId = #{userId}
+</delete>
+
+<!-- 특정 유저의 큰 주문 목록 보기-->
+<select id="orderList" resultType="com.wmk.ex.vo.OrderVO">
+ select
+     orderId, userId, orderRec, userAddr1, userAddr2, userAddr3, orderPhon, amount, orderDate
+ from wmk_order 
+     where userId = #{userId}
+</select>
+
+
+
+<!-- 특정 큰 주문의 상세내용 보기 -->
+<select id="orderView" resultType="com.wmk.ex.vo.OrderListVO">
+ select
+     o.orderId, o.userId, o.orderRec, o.userAddr1, o.userAddr2, o.userAddr3, o.orderPhon, o.amount, o.orderDate,
+     d.orderDetailsNum, d.gdsNum, d.cartStock,
+     g.gdsName, g.gdsImg, g.gdsPrice
+ from wmk_order o
+         inner join wmk_order_details d
+             on o.orderId = d.orderId
+         inner join wmk_goods g
+             on d.gdsNum = g.gdsNum
+     where o.userId = #{userId}
+         and o.orderId = #{orderId}
+</select>
+
+
+
+</mapper>

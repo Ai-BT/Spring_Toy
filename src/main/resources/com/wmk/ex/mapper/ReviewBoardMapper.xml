@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wmk.ex.mapper.ReviewBoardMapper">
+	
+	<!--게시판 목록  -->
+	
+	<select id="getReviewList" resultType="com.wmk.ex.vo.ReviewBoardVO" parameterType="com.wmk.ex.vo.ReviewBoardVO">
+	<![CDATA[ 
+		select
+     		a.rBoardNum, rId, rTitle, rInShort, rContent, rDate, rOpenTime, rArea, rAdress, rHit, rStep, rIndent, rCategory, Like_Cnt, b.stored_file_name as storedFileName
+	    from Review_BOARD a
+	    	left join Review_img_file b
+	    	on(a.rBoardNum = b.rBoardNum)
+	    	where rArea =  #{rArea}
+	    	order by rBoardNum desc
+	]]>
+ 	</select>
+	
+	<select id="getHotReviewList" resultType="com.wmk.ex.vo.ReviewBoardVO" parameterType="com.wmk.ex.vo.ReviewBoardVO">
+	<![CDATA[ 
+		select
+     		a.rBoardNum, rId, rTitle, rInShort, rContent, rDate, rOpenTime, rArea, rAdress, rHit, rStep, rIndent, rCategory, Like_Cnt, b.stored_file_name as storedFileName
+	    from Review_BOARD a
+	    	left join Review_img_file b
+	    	on(a.rBoardNum = b.rBoardNum) 
+	    	order by like_cnt desc 
+	]]>
+ 	</select>
+ 	
+ 	<select id="getReviewListAjax" resultType="com.wmk.ex.vo.ReviewBoardVO" parameterType="com.wmk.ex.vo.ReviewBoardVO">
+	<![CDATA[ 
+		select 
+     		a.rBoardNum, rId, rTitle, rInShort, rContent, rDate, rOpenTime, rArea, rAdress, rHit, rStep, rIndent, rCategory, Like_Cnt, b.stored_file_name as storedFileName
+	    from Review_BOARD a
+	    	left join Review_img_file b
+	    	on(a.rBoardNum = b.rBoardNum)
+	    	where rCategory = #{rCategory}
+	    	and rArea =  #{rArea}
+	    	order by rBoardNum desc
+	
+	]]>
+ 	</select>
+<!-- 	    	order by rBoardNum desc -->
+ 	
+ 	
+ 	<!--게시판 번호-->
+ 	<select id="getrBoardNum" resultType="com.wmk.ex.vo.ReviewBoardVO">
+	<![CDATA[ 
+		select * from Review_BOARD where rBoardNum = #{rBoardNum} 
+	]]>
+	</select>	
+	
+	<!--게시판 VO의 회원 get id  -->
+	<select id="getrId" resultType="com.wmk.ex.vo.ReviewBoardVO">
+	<![CDATA[ 
+		select * from Review_BOARD where rId = #{rId} 
+	]]>
+	</select> 
+	
+	<!--게시판 작성-->
+	<insert id="rWriteBoard">
+		insert into Review_BOARD (rBoardNum, rId, rTitle, rInShort, rOpenTime, rArea, rAdress, rContent, rHit, rStep, rIndent, rCategory) 
+			values (review_board_seq.nextval, #{rId}, #{rTitle}, #{rInShort}, #{rOpenTime, jdbcType=VARCHAR}, #{rArea}, #{rAdress, jdbcType=VARCHAR}, #{rContent}, 0, 0, 0, #{rCategory})
+	</insert> 
+	
+	<!--게시판 수정  -->
+	<insert id="updaterModify" >
+	<![CDATA[
+		update Review_BOARD set rTitle = #{rTitle}, rContent = #{rContent}, rOpenTime = #{rOpenTime}, rInShort= #{rInShort}, rAdress= #{rAdress}, rCategory= #{rCategory} where rId = #{rId} and rBoardNum = #{rBoardNum}
+	]]>
+	</insert>
+	
+	<!--게시판 삭제  -->
+	<delete id="deleteBoard" >
+	<![CDATA[
+		delete from Review_BOARD where rBoardNum = #{rBoardNum} and rId = #{rId}
+	]]>
+	</delete>
+	
+	<!-- 게시판 아이디 체크 -->
+	<select id="reviewBoardUserId" resultType="String">
+	<![CDATA[
+	 	select rId
+	 		from Review_BOARD
+	 			where rBoardNum = #{rBoardNum}
+	 ]]>
+	</select>
+
+	
+	<!--조회수  -->
+	<insert id="addUprHit" >
+	<![CDATA[
+		update Review_BOARD set rHit = rHit + 1 where rBoardNum = #{rBoardNum}
+	]]>
+	</insert>
+	
+	<!-- 첨부파일 업로드    parameterType="hashMap"인 경우 value에 대문자로 들어가야한다. -->
+	<insert id="insertFile" parameterType="hashMap" >
+		<![CDATA[
+		insert into Review_Img_File (
+	        file_no
+	        , rBoardNum
+	        , ORIGINAL_FILE_NAME
+	        , STORED_FILE_NAME
+	        , FILE_SIZE
+	        , regdate
+	    ) values (
+	        Review_Img_File_no_seq.nextval
+	        , review_board_seq.currval   
+	        , #{ORIGINAL_FILE_NAME ,jdbcType=VARCHAR}
+	        , #{STORED_FILE_NAME ,jdbcType=VARCHAR}
+	        , #{FILE_SIZE, jdbcType=VARCHAR}
+	        , sysdate
+	    )
+		]]>
+	</insert>
+	
+	
+	<!-- 첨부파일 업데이트    parameterType="hashMap"인 경우 value에 대문자로 들어가야한다. -->
+	<update id="updateFile" parameterType="hashMap" >
+		<![CDATA[
+		UPDATE Review_Img_File 
+			SET
+		        ORIGINAL_FILE_NAME = #{ORIGINAL_FILE_NAME ,jdbcType=VARCHAR}
+		        , STORED_FILE_NAME = #{STORED_FILE_NAME ,jdbcType=VARCHAR}
+		        , FILE_SIZE = #{FILE_SIZE, jdbcType=VARCHAR}
+		        , regdate = sysdate
+		WHERE rBoardNum  = #{rBoardNum}
+	]]>
+	</update>
+	
+	<!-- 첨부파일 삭제    parameterType="hashMap"인 경우 value에 대문자로 들어가야한다. -->
+	<update id="deleteFile" parameterType="hashMap" >
+		<![CDATA[
+		DELETE From Review_Img_File 
+			WHERE FILE_NO  = #{rBoardNum}
+	]]>
+	</update>
+	
+	
+	<!-- 첨부파일 조회 -->
+	<select id="selectFileList" parameterType="int" resultType="hashMap">
+		SELECT FILE_NO,
+			   ORIGINAL_FILE_NAME,
+			   ROUND(FILE_SIZE/1024,1) AS FILE_SIZE,
+			   STORED_FILE_NAME
+		  FROM Review_Img_File
+		 WHERE rBoardNum = #{rBoardNum} and FILE_NO=#{FILE_NO}
+	</select>
+	
+	
+	
+	
+	<!--아래는 댓글 부분 -->
+	<!--댓글 목록  -->
+	<select id="replyList" resultType="com.wmk.ex.vo.ReviewReplyVO">	
+	select rBoardNum, id, repNum, repCon, repDate
+	from review_reply 
+	where rBoardNum = #{rBoardNum}
+	</select>
+	
+	<!--댓글 작성 -->
+	<insert id="registReply">
+	insert into review_reply (rBoardNum, id, repNum, repCon)
+ 		values (#{rBoardNum}, #{id}, review_reply_seq.nextval, #{repCon})
+	</insert>
+	
+	<!-- 댓글 삭제 -->
+	<delete id="deleteReply">
+	 delete review_reply
+	     where repNum = #{repNum}
+	         and id = #{id}
+	</delete>
+	
+	<!-- 아이디 체크 -->
+	<select id="replyUserIdCheck" resultType="String">
+	 select id
+	  from review_reply
+	      where repNum = #{repNum}
+	</select>
+	
+		<select id="getTotalCount" resultType="int">
+		select count(*)	from Review_BOARD where rBoardNum > 0
+	</select>
+	
+	<!-- 좋아요   -->
+	<update id="updateLike">
+	<![CDATA[
+		update REVIEW_BOARD set LIKE_CNT = LIKE_CNT + 1 where RBOARDNUM = #{RBOARDNUM}
+	]]>
+	</update>
+	
+	<insert id="insertLike">
+		insert into likeTo(likeNo, RBOARDNUM, id) values(like_to_seq.nextval, #{RBOARDNUM},#{id})
+	</insert>
+	
+	
+	<!-- 좋아요 해제 -->
+	<update id="updateUnLike">
+		update REVIEW_BOARD set LIKE_CNT = LIKE_CNt -1 where RBOARDNUM = #{RBOARDNUM}
+	</update>
+	
+	<delete id="deleteLike">
+		Delete from likeTo where id = #{id} and RBOARDNUM = #{RBOARDNUM}
+	</delete>
+	
+	<select id="getCountLike" resultType="int">
+		select count(*) from likeTo where id = #{id} and RBOARDNUM = #{RBOARDNUM}
+	</select>
+	
+	<select id="getLikeCnt" resultType="int">
+		select count(*) from likeTo where RBOARDNUM = #{RBOARDNUM}
+	</select>
+	
+	<select id="cntLike">
+		select Like_CNT from REVIEW_BOARD where RBOARDNUM = #{RBOARDNUM}
+	</select>
+	
+	<!-- 여행지 게시판 검색 -->
+	<select id="findReviewBoardByTitle" resultType="com.wmk.ex.vo.ReviewBoardVO" parameterType="com.wmk.ex.vo.ReviewBoardVO">
+	<![CDATA[ 
+		select
+     		a.rBoardNum, rId, rTitle, rInShort, rContent, rDate, rOpenTime, rArea, rAdress, rHit, rStep, rIndent, rCategory, Like_Cnt, b.stored_file_name as storedFileName
+	    from Review_BOARD a
+	    	left join Review_img_file b
+	    	on(a.rBoardNum = b.rBoardNum)
+	    	where rTitle like '%'||#{rTitle}||'%' 
+	    	order by rBoardNum desc
+	]]>
+ 	</select>
+	
+</mapper>

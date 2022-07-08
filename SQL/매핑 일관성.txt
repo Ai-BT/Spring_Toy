@@ -1,0 +1,4 @@
+
+
+톰캣 서버에서 설정 필요
+<Connector connectionTimeout="20000" port="8282" protocol="HTTP/1.1" redirectPort="8443" parseBodyMethods="POST,PUT,DELETE,PATCH"/>

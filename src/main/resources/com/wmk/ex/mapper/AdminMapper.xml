@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wmk.ex.mapper.AdminMapper">
+		
+	<!-- 카테고리 호출 -->
+	<select id="category" resultType="com.wmk.ex.vo.CategoryVO">
+		 select level, cateName, cateCode, cateCodeRef
+		 	from goods_category
+		    	start with cateCodeRef is null connect by prior cateCode = cateCodeRef
+	</select>	
+
+	<!-- 상품 등록 -->
+	<insert id="register">
+		insert into wmk_goods (gdsNum, gdsName, cateCode, gdsPrice, gdsStock, gdsDes, gdsImg) 
+			values (wmk_goods_seq.nextval, #{gdsName}, #{cateCode}, #{gdsPrice}, #{gdsStock}, #{gdsDes}, #{gdsImg})
+	</insert>
+
+	<!-- 상품 목록--> 
+ 	<select id="goodslist" resultType="com.wmk.ex.vo.GoodsViewVO">
+		select gdsNum, gdsName, cateCode, gdsPrice, gdsStock, gdsDes, gdsImg, gdsDate
+			from wmk_goods 
+				order by gdsNum desc
+	</select>
+	
+	<!-- 상품 보기-->
+	<select id="goodsView" resultType="com.wmk.ex.vo.GoodsViewVO">
+		 select gdsNum, gdsName, cateCode, gdsPrice, gdsStock, gdsDes, gdsImg, gdsDate
+		     from wmk_goods
+		         where gdsNum = #{gdsNum}
+	</select>
+	
+	<!-- 상품 삭제 -->
+	<delete id="goodsDelete">
+	 	delete wmk_goods
+	 		where gdsNum = #{gdsNum}
+	</delete>
+
+</mapper>

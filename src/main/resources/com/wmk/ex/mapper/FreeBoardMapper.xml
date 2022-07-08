@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wmk.ex.mapper.FreeBoardMapper">
+	
+	<!--게시판 목록  -->
+	<select id="getList" resultType="com.wmk.ex.vo.FreeBoardVO"> 
+		select fBoard_Num, fId, fTitle, fContent, fDate, fHit, fGroup, fStep, fIndent
+	    	from FREE_BOARD
+	    		order by fGroup desc, fStep asc
+ 	</select>
+ 	
+ 	<!--게시판 번호-->
+ 	<select id="getNum" resultType="com.wmk.ex.vo.FreeBoardVO">
+		select * 
+			from FREE_BOARD 
+				where fBoard_Num = #{fBoard_Num} 
+	</select>	
+	
+	<!--게시판 VO의 회원 get id  -->
+	<select id="getfId" resultType="com.wmk.ex.vo.FreeBoardVO">
+		select * from FREE_BOARD where fId = #{fId} 
+	</select> 
+
+	<!--게시판 작성-->
+	<insert id="writeBoard" >
+		insert into FREE_BOARD (fBoard_Num, fId, fTitle, fContent, fHit, fGroup, fStep, fIndent) 
+			values (free_board_seq.nextval, #{fId}, #{fTitle}, #{fContent}, 0, free_board_seq.currval, 0, 0)
+	</insert> 	
+	
+	<!--게시판 수정  -->
+	<update id="updateModify" >
+	<![CDATA[
+		update FREE_BOARD 
+			set fTitle = #{fTitle}, fContent = #{fContent} 
+				where fId = #{fId} and fBoard_Num = #{fBoard_Num}
+	]]>
+	</update>
+	
+	<!--게시판 삭제  -->
+	<delete id="deleteBoard" >
+	<![CDATA[
+		delete FREE_BOARD 
+			where fBoard_Num = #{fBoard_Num} and fId = #{fId}
+	]]>
+	</delete>
+	
+	<!-- 게시판 아이디 체크 -->
+	<select id="boardUserIdCheck" resultType="String">
+	<![CDATA[
+	 	select fId 
+	 		from free_board 
+	 			where fBoard_Num = #{fBoard_Num}
+	 ]]>
+	</select>	
+	
+	<!--조회수  -->
+	<insert id="addUphit" >
+	<![CDATA[
+		update FREE_BOARD 
+			set fHit = fHit + 1 
+				where fBoard_Num = #{fBoard_Num}
+	]]>
+	</insert>
+	
+	<!--페이징 처리  -->
+	<select id="getListWithPaging" resultType="com.wmk.ex.vo.FreeBoardVO">
+	<![CDATA[
+			SELECT * FROM (
+			     SELECT ROWNUM AS RNUM, A.* FROM (
+	               		select fBoard_Num, fId, fTitle, fContent, fDate, fHit, fGroup, fStep, fIndent
+					    	from FREE_BOARD			       		
+								order by fGroup desc, fStep asc
+			    ) A WHERE ROWNUM <= #{pageNum} * #{amount}
+			) WHERE RNUM > (#{pageNum}-1) * #{amount}
+	]]>
+	</select>
+	
+	
+	<select id="getTotalCount" resultType="int">
+	<![CDATA[
+			select count(*)	from FREE_BOARD where fBoard_Num>0
+	]]>
+	</select>
+	
+	<!--댓글 목록-->
+	<select id="replyList" resultType="com.wmk.ex.vo.FreeReplyVO">	
+	<![CDATA[
+		select fBoard_Num, id, repNum, repCon, repDate
+			from free_reply 
+				where fBoard_Num = #{fBoard_Num}
+	]]>
+	</select>
+	
+	<!--댓글 입력  -->
+	<insert id="registReply">
+		insert into free_reply (fBoard_Num, id, repNum, repCon)
+ 			values (#{fBoard_Num}, #{id}, FREE_REPLY_SEQ.nextval, #{repCon})
+	</insert>
+	
+	<!-- 댓글 삭제 -->
+	<delete id="deleteReply">
+	<![CDATA[
+		delete free_reply 
+			where repNum = #{repNum} and id = #{id}
+	]]>
+	</delete>
+	
+	<!-- 댓글 아이디 체크 -->
+	<select id="replyUserIdCheck" resultType="String">
+	<![CDATA[
+		select id
+			from free_reply
+				where repNum = #{repNum}
+	]]>
+	</select>
+	
+	<!-- 게시판 서치 -->
+	<select id="findBoardByTitle" parameterType="String" resultType="com.wmk.ex.vo.FreeBoardVO">
+	<![CDATA[	
+		select * 
+			from FREE_BOARD 
+				where fTitle like '%'||#{fTitle}||'%' 
+	]]>
+	</select>
+</mapper>

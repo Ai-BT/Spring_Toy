@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wmk.ex.mapper.UserMapper">
+	
+	<!--insert Users-->
+	<insert id="insertUser">
+		insert into wmk_users(id,pw,nickname,email,nationality,enabled,login_Type)
+			values(#{id},#{pw},#{nickname},#{email},#{nationality},#{enabled}, #{login_Type})
+	</insert> 
+	
+	<insert id="insertAuthorities">
+		insert into wmk_authorities (id, authority) values(#{id}, 'ROLE_USER')
+	</insert> 
+	
+	<!-- kakao social -->
+	<select id="readUser" resultType="com.wmk.ex.vo.UserVO">
+		 select * from wmk_users where id = #{id}
+	</select>
+	
+	<select id="readUserLoginType" resultType="com.wmk.ex.vo.UserVO">
+		select * from wmk_users where login_Type = #{login_Type}
+	</select>
+	
+	
+	
+	<select id="readUserByIdAndLoginType" resultType="com.wmk.ex.vo.UserVO">
+		select * from wmk_users where id = #{id} and login_Type = #{login_Type}
+	</select>
+	
+	<!-- Delete Users  -->
+	<delete id="authori">
+		delete from wmk_authorities where id = #{id}
+	</delete>
+	
+	<delete id="delMember">
+		delete from wmk_users where id = #{id} and pw = #{pw}
+	</delete>
+	
+	<!-- UpdateUsers -->
+	<update id="modifyUser">
+		update wmk_users set pw = #{pw}, nickname = #{nickname,jdbcType=VARCHAR}, email =#{email,jdbcType=VARCHAR}, nationality =#{nationality,jdbcType=VARCHAR}  where id = #{id}
+	</update>
+	
+	<!-- PwUpdateUsers -->
+	<update id="pwModifyUser">
+		update wmk_users set pw = #{pw}  where id = #{id}
+	</update>
+	
+	<!-- CheckByUsersId  -->
+	<select id="idChk">
+		select * from wmk_users where id = #{id} and login_Type = #{login_Type}
+	</select>
+	
+	<!-- UpdateUsers -->
+	<update id="uploadProfileImg" parameterType="com.wmk.ex.vo.UserVO">
+		update wmk_users set profile = #{profile} , imgName = #{imgName} where id = #{id}
+	</update>
+	
+	
+	
+	
+	
+	
+	
+</mapper>

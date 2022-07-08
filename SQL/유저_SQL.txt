@@ -1,0 +1,37 @@
+
+--유저 테이블 생성
+create table wmk_users(
+   id varchar2(50) not null primary key,
+   pw varchar2(100) not null,
+    nickname varchar2(50),
+    email varchar2(50),
+    nationality varchar2(50), 
+   enabled char(1) DEFAULT '1'
+);
+
+--로그인 타입 추가
+ALTER TABLE wmk_users
+ADD LOGIN_TYPE VARCHAR2(100) default 'NORMAL' not null;
+
+--권한 테이블 생성
+create table wmk_authorities (
+   id varchar2(50) not null,
+   authority varchar2(50) not null,
+   constraint fk_authorities_wmk_users foreign key(id) references wmk_users(id)
+);
+
+
+--유니크 키 인덱스 생성
+create unique index ix_auth_id on wmk_authorities (id,authority);
+
+--프로필 사진 컬럼 생성
+alter table wmk_users add PROFILE VARCHAR2(50 BYTE);  --파일 이름
+alter table wmk_users add IMGNAME VARCHAR2(50 BYTE);  --바뀐 파일이름
+
+--관리자 계정 만드는 방법 (정경채)
+1) 홈페이지에서 admin 아이디로 새롭게 회원가입을 한다.
+2) SQL Developer 를 킨다.
+3) 아래의 쿼리문을 작성후 commit 을 한다.
+
+insert into wmk_authorities (id, authority)
+values('admin', 'ROLE_ADMIN');
